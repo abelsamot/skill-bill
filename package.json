@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@forestadmin/agent": "^1.0.0-beta.47",
+    "@forestadmin/datasource-mongoose": "^1.0.0-beta.15",
+    "child_process": "^1.0.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "mongodb": "^4.8.1",
+    "mongoose": "^6.5.0",
+    "path": "^0.12.7",
+    "python-shell": "^3.0.1",
+    "react-moralis": "^1.3.5",
+    "react-router-dom": "^5.3.0",
+    "walletconnect": "^1.7.8",
+    "web-vitals": "^2.1.4",
+    "web3": "^1.7.5"
+  },
+  "devDependencies": {
+    "jest": "^28.1.3"
+  }
+}
