@@ -501,7 +501,7 @@ app.get('/getUserTree', (req, res) => {
                 const nodeStates = {
                     'item-one': {
                         optional: false,
-                        nodeState: 'unlocked',
+                        nodeState: 'selected',
                       }
                 }
                 tests.map((test,i,row)=> {
@@ -513,9 +513,9 @@ app.get('/getUserTree', (req, res) => {
                                 console.log(err)
                             }
                             else{
-                                var stateOfNode = 'selected'
+                                var stateOfNode = 'unlocked'
                                 if(test.testDone){
-                                    stateOfNode = 'unlocked'
+                                    stateOfNode = 'selected'
                                 }
 
                                 nodeStates[test._id] = {
@@ -537,15 +537,7 @@ app.get('/getUserTree', (req, res) => {
                                     console.log(row.length-1)
                                     res.send({
                                         testTree:testTree,
-                                        nodeStates:{
-                                            'item-one': {
-                                              optional: false,
-                                              nodeState: 'selected',
-                                            },
-                                            'ImUTHOzq6tW5D4ewMBbkcVkm': {optional: false, nodeState: 'locked'},
-                                            'nxe1YtkWx8vOi1iUbdiLhoJQ': {optional: false, nodeState: 'selected'},
-                                            'xChEd85EoaXxHx0VX5bjJBQj': {optional: false, nodeState: 'selected'},
-                                        }
+                                        nodeStates:nodeStates
                                     })
 
                                 }
