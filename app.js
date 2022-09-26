@@ -9,6 +9,9 @@ const PythonShell = require("python-shell").PythonShell;
 const { resolve } = require('path/posix');
 var _ = require('underscore');
 require("dotenv").config()
+const cors = require("cors");
+
+app.use(cors())
 
 app.use(require('body-parser').urlencoded({ extended: false }));
 // Connect to database
