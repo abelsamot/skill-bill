@@ -127,7 +127,6 @@ const userSchema = new mongoose.Schema({
     lastName: String,
     _created_at:Date,
     _updated_at:Date,
-    userType:String,
     tests:[{
         _id:String,
         testName:String,
@@ -731,8 +730,9 @@ app.get('/getTests', (req,res)=> {
             console.log(err)
         }
         else{
-            res.send(users)
-            console.log(users)
+            const candidates = users.filter((obj) => {return obj.typeOfUser === 'Candidate'});
+            res.send(candidates)
+            console.log(candidates)
         }
     })
   })
