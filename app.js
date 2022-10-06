@@ -213,6 +213,9 @@ app.post('/testBegun', (req, res) => {
     })
     res.end("success")
 })
+app.post('/connard', (req, res) => {
+    res.end("Fuck you")
+})
 
 app.post('/deleteQCMQuestion', (req, res) => {
     testId= req.query.testId
