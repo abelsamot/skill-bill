@@ -6,7 +6,6 @@ const mongoose = require('mongoose');
 const { assert } = require('chai');
 const { ObjectId } = require('bson');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 const execSync = require('child_process').execSync;
 const fs = require('fs');
 const path = require('path');
@@ -15,7 +14,6 @@ const { resolve } = require('path/posix');
 var _ = require('underscore');
 require("dotenv").config()
 
-app.use(cors())
 app.use(require('body-parser').urlencoded({ extended: false }));
 // Connect to database
 mongoose.connect("mongodb://147.182.158.244:56728/parse", {useNewUrlParser:true});
