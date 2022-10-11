@@ -14,7 +14,6 @@ const { resolve } = require('path/posix');
 var _ = require('underscore');
 require("dotenv").config()
 
-app.use(require('body-parser').urlencoded({ extended: false }));
 // Connect to database
 mongoose.connect("mongodb://147.182.158.244:56728/parse", {useNewUrlParser:true});
 var isoDate = new Date().toISOString()
