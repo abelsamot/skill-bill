@@ -27,3 +27,8 @@ app.get('/similarweb', (req, res) => {
 app.get('/', (req, res) => {
     res.send("Hello")
   })
+
+
+app.listen(process.env.PORT || 5000, () => {
+  console.log(`Example app listening on port ${port}`)
+})
