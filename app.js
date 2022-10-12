@@ -685,7 +685,9 @@ app.get('/getQCMTestQuestions', (req, res) => {
                         })
                         question.map((q)=>{
                             const index = categoryCount.findIndex(object => {
-                                return object.id === q.questionCategory;
+                                thisObjectId = object.id.replace(/\s/g, '')
+                                qQuestionCategory = q.questionCategory.replace(/\s/g, '')
+                                return thisObjectId === qQuestionCategory;
                               });
                               categoryCount[index].questions.push(q)
                         }
