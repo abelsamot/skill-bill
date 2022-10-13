@@ -71,7 +71,12 @@ const qcmQuestionsSchema = new mongoose.Schema({
         _id:String,
         answerText:String,
         isCorrect:Boolean
-    }]
+    }],
+    candidatesAnswers:[{
+        _id:String,
+        answer:String,
+        isCorrect:Boolean
+    }],
 },{ collection: 'qcmQuestions',versionKey: false })
 
 const qcmQuestions = mongoose.model("qcmQuestions", qcmQuestionsSchema)
@@ -142,6 +147,12 @@ const userSchema = new mongoose.Schema({
         testPictures:Array,
         testBegun:Boolean,
         testDone:Boolean,
+        answers:[{
+            _id:String,
+            questionId:String,
+            categoryName:String,
+            isCorrect:Boolean,
+        }]
     }],
 },{ collection: '_User',versionKey: false })
 const User = mongoose.model("_User", userSchema)
@@ -459,6 +470,56 @@ app.post('/addTestsResultsToUser', (req, res) => {
     res.end("yes")
     })
 
+
+app.post('/addQuestionResultToUser', (req, res) => {
+        testId = req.query.testId
+        answer = req.query.answer
+        isCorrect = (req.query.isCorrect === 'true')
+        questionId = req.query.questionId
+        categoryName = req.query.categoryName
+        userId = req.query.userId
+        answerId = makeid(24)
+        User.findOne({_id:userId },function(err,user){
+                    testsToMap = user.tests
+                    if(err){
+                        console.log(err)
+                    }
+                    else{
+                        testsToMap.map((test)=> {
+                            if(test._id===testId){
+                                test.answers.push({
+                                    _id:answerId,
+                                    questionId:questionId,
+                                    categoryName:categoryName,
+                                    isCorrect:isCorrect,
+                                })
+                                console.log("Result added ")
+                                console.log(test.answers)
+                            }
+                            else{
+                                console.log(test.testName)
+                            }
+                        })
+                        user.save()
+                    }
+                })
+        qcmQuestions.findOne({_id:questionId },function(err,question){
+            if(err){
+                console.log(err)
+            }
+            else{
+                question.candidatesAnswers.push({
+                    _id:answerId,
+                    answer:answer,
+                    isCorrect:isCorrect
+                })
+                console.log(question.candidatesAnswers)
+            }
+            question.save()
+        })
+        res.end("yes")
+        })
+    
 app.post('/addTestsToUser', (req, res) => {
     listOfTests = req.query.listOfTests
     user = req.query.username
@@ -502,6 +563,51 @@ app.get('/getUserData', (req, res) => {
             }
         })
       })
+
+app.get('/getTestResultByCategory', (req, res) => {
+        id = req.query.id
+        User.findOne({_id:id},function(err,user){
+            if(err){
+                console.log(err)
+            }
+            else{
+                everyTestsResults = []
+                user.tests.map((test)=>{
+                    if("testName" in test){
+                        if(test.testDone===true){
+                            resultsByCategory = []
+                                test.answers.map((answer)=>{
+                                    let obj = resultsByCategory.find(o => o.categoryName === answer.categoryName)
+                                    let index = resultsByCategory.findIndex(o => o.categoryName === answer.categoryName)
+                                    isCorrect = answer.isCorrect
+                                    if(obj===undefined){
+                                    
+                                        newCategory = {
+                                            categoryName:answer.categoryName,
+                                            numberOfAppearance:1,
+                                            numberOfCorrectAnswers: isCorrect ? 1 : 0
+                                        }
+                                        resultsByCategory.push(newCategory)
+                                    }else{
+                                        resultsByCategory[index].numberOfAppearance=resultsByCategory[index].numberOfAppearance+1
+                                        resultsByCategory[index].numberOfCorrectAnswers=resultsByCategory[index].numberOfCorrectAnswers+(isCorrect ? 1 : 0)
+
+                                    }
+                                })
+                            console.log(resultsByCategory)
+                            everyTestsResults.push({
+                                testName:test.testName,
+                                resultsByCategory:resultsByCategory
+                            })
+                            
+                        }
+                    }
+                })
+                res.send(everyTestsResults)
+            }
+        })
+    })
+
 
 app.get('/getUserById', (req, res) => {
         id = req.query.id
@@ -730,6 +836,45 @@ app.get('/getAllQuestionsForOneQCM', (req, res) => {
             }
         })   
         })
+
+app.get('/getQuestionsAndResultsForOneQCM', (req, res) => {
+            id = req.query.id
+            Test.findOne({_id:id},function(err,test){
+                if(err){
+                    console.log(err)
+                }
+                else{
+                    if(test){
+                        qcmQuestions.find({_id:test.qcmQuestions},function(err,questions){
+                            let questionsAnswers = []
+                            questions.map((q)=>{
+                                if("candidatesAnswers" in q){
+                                    console.log("=> Question :" + q.question)
+                                    let nbCorrectAnswers=0
+                                    let nbAnswers=0
+                                    q.candidatesAnswers.map((ans,i)=>{
+                                        if(ans.isCorrect){
+                                            nbCorrectAnswers=nbCorrectAnswers+1
+                                        }
+                                        nbAnswers=i+1
+                                    })
+                                    questionsAnswers.push({
+                                        id:q._id,
+                                        question:q.question,
+                                        nbCorrectAnswers:nbCorrectAnswers,
+                                        nbAnswers:nbAnswers,
+                                    })
+                                }
+                            })
+                                res.send(questionsAnswers)
+                        })
+                    }
+                    else{
+                        res.send([{}])
+                    }
+                }
+            })   
+            })
 
 app.get('/getCodeTestQuestions', (req, res) => {
         id = req.query.id
