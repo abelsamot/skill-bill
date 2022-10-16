@@ -530,6 +530,7 @@ app.post('/addTestsToUser', (req, res) => {
                     console.log(err)
                 }
                 else{
+                    user.status = "Test sent"
                     for(let i = 0; i < listOfTests.length; i++){
                         const testObject = JSON.parse(listOfTests[i])
                         console.log(testObject.testName)
