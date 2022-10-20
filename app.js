@@ -453,20 +453,32 @@ app.post('/addTestsResultsToUser', (req, res) => {
                     console.log(err)
                 }
                 else{
+                    testsToMap = user.tests
+                nbTests = 0
+                nbTestsDone = 0
+                if(err){
+                    console.log(err)
+                }
+                else{
                     testsToMap.map((test)=> {
                         if(test._id===testId){
                             test.testScore=testScore
                             test.testDone = true
-                            test.screenshots
-                            console.log(" Score added " + testScore)
                         }
-                        else{
-                            console.log(test.testName)
+                        if(test.testDone){
+                            nbTestsDone= nbTestsDone+1
+                        }
+                        if(test.testDone != undefined){
+                            nbTests = nbTests +1
                         }
                     })
+                    if(nbTests===nbTestsDone){
+                        user.status = "Tests finished"
+                    }
                     user.save()
                 }
-            })
+            }
+        })
     res.end("yes")
     })
 
