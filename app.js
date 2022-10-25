@@ -18,7 +18,7 @@ require("dotenv").config()
 app.use(cors())
 app.use(require('body-parser').urlencoded({ extended: false }));
 // Connect to database
-mongoose.connect("mongodb://147.182.158.244:56728/parse", {useNewUrlParser:true});
+mongoose.connect("mongodb://138.197.152.110:56728/parse", {useNewUrlParser:true});
 var isoDate = new Date().toISOString()
 
 console.log("OK")
